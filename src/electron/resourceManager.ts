@@ -1,3 +1,5 @@
+import { BrowserWindow } from "electron";
+import { EVENTS } from "./constant.js";
 import {
   getMemoryUsage,
   getProcessCpuUsage,
@@ -6,7 +8,7 @@ import {
 
 const POLLING_INTERVAL = 1000;
 
-export function pollResources() {
+export function pollResources(mainWindow: BrowserWindow) {
   setInterval(async () => {
     const [procCpu, sysCpu] = await Promise.all([
       getProcessCpuUsage(POLLING_INTERVAL),
@@ -14,10 +16,12 @@ export function pollResources() {
     ]);
     const mem = getMemoryUsage();
 
-    console.log("=== System Stats ===");
-    console.log(`Process CPU: ${procCpu.toFixed(2)}%`);
-    console.log(`System CPU:  ${sysCpu.toFixed(2)}%`);
-    console.log(`Memory: ${mem.usedMB}MB / ${mem.totalMB}MB (${mem.percent}%)`);
-    console.log("====================\n");
-  }, 3000);
+    const result = {
+      processUsage: procCpu.toFixed(2),
+      systemUsage: sysCpu.toFixed(2),
+      memUsage: mem.usedMB,
+    };
+
+    mainWindow.webContents.send(EVENTS.STATISTIC, result);
+  }, POLLING_INTERVAL);
 }

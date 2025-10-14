@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { CONFIG } from "./config.js";
 import { getPreloadPath } from "./pathResolver.js";
@@ -18,5 +18,9 @@ app.on("ready", () => {
     mainWindow.loadFile(join(app.getAppPath(), "dist-ui/index.html"));
   }
 
-  pollResources();
+  pollResources(mainWindow);
+
+  ipcMain.handle("getStaticData", (event) => {
+    return {};
+  });
 });
