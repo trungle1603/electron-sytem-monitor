@@ -1,0 +1,16 @@
+{
+  "appId": "com.trungle1603.system-monitor",
+  "files": ["dist-electron", "dist-ui"],
+  "icon": "./public/desktopIcon.png",
+  "extraResources": ["dis-electron/preload.cjs"],
+  "mac": {
+    "target": ["zip"]
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
